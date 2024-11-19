@@ -1,14 +1,13 @@
 let waveSketch = (p) => {
-  let img = null; // Variable to hold the uploaded image
-  let titleText = ""; // Variable to hold the title text
-  let fontSize = 120 / 2.5; // Default font size
+  let img = null;
+  let titleText = "";
+  let fontSize = 120 / 2.5;
   let location = "top";
-  let customFont; // Variable for the custom font
+  let customFont;
   let platform = "instagram";
   let platformOffset = 240;
 
   p.preload = () => {
-    // Load the custom font
     customFont = p.loadFont("./Karrik-Italic.otf");
   };
 
@@ -16,7 +15,7 @@ let waveSketch = (p) => {
     let waveWrapper = p.createCanvas(1080 / 2.5, 1920 / 2.5);
     waveWrapper.parent("sketch-wrapper");
     p.background(255);
-    p.textFont(customFont); // Set the custom font
+    p.textFont(customFont);
     p.textStyle(p.ITALIC);
   };
 
@@ -33,13 +32,17 @@ let waveSketch = (p) => {
       let yOffset = (p.height - renderHeight) / 2;
 
       p.image(img, xOffset, yOffset, renderWidth, renderHeight);
+
+      p.fill(73, 16, 206, 30);
+      p.noStroke();
+      p.rect(0, 0, p.width, p.height);
     }
 
     if (platform === "instagram") {
-      platformOffset = 240;
+      platformOffset = 280;
       console.log(platformOffset);
     } else {
-      platformOffset = 320;
+      platformOffset = 360;
       console.log(platformOffset);
     }
 
@@ -47,7 +50,14 @@ let waveSketch = (p) => {
       if (location === "top") {
         p.textAlign(p.RIGHT, p.TOP);
         p.push();
-        setGradient(0, 0, p.width, platformOffset, p.color(0), p.color(0, 4));
+        setGradient(
+          0,
+          0,
+          p.width,
+          platformOffset + 100,
+          p.color(0),
+          p.color(0, 4)
+        );
         p.noStroke();
         p.rect(0, 0, p.width, platformOffset);
         p.pop();
@@ -59,7 +69,7 @@ let waveSketch = (p) => {
           0,
           p.height - platformOffset,
           p.width,
-          platformOffset,
+          platformOffset + 100,
           p.color(0, 4),
           p.color(0)
         );
@@ -70,18 +80,16 @@ let waveSketch = (p) => {
 
       p.textSize(fontSize);
 
-      let xPosition = p.width - 54 / 2.5;
+      let xPosition = p.width - 80 / 2.5;
       let yPosition =
         location === "top"
           ? 0 + platformOffset / 4
           : p.height - platformOffset / 2.5;
-      const availableWidth = p.width - 54; // Ensure at least 120px from the left edge
+      const availableWidth = p.width - 80;
 
-      // Wrap text if necessary
       let wrappedText = wrapText(titleText.toUpperCase(), availableWidth);
 
-      // Render each line of wrapped text
-      const lineHeight = fontSize * 0.8; // Adjust line spacing
+      const lineHeight = fontSize * 0.8;
       wrappedText.forEach((line, i) => {
         p.fill(255);
         p.text(line, xPosition, yPosition + i * lineHeight);
@@ -93,7 +101,6 @@ let waveSketch = (p) => {
     }
   };
 
-  // Function to load the image when a file is uploaded
   p.setImage = (file) => {
     if (file.type === "image") {
       img = p.loadImage(file.data, () => {
@@ -123,7 +130,7 @@ let waveSketch = (p) => {
   function wrapText(text, maxWidth) {
     let words = text.split(" ");
     let lines = [];
-    let currentLine = words[0]; // Initialize with the first word
+    let currentLine = words[0];
 
     for (let i = 1; i < words.length; i++) {
       let word = words[i];
@@ -131,14 +138,13 @@ let waveSketch = (p) => {
       let testWidth = p.textWidth(testLine);
 
       if (testWidth > maxWidth) {
-        lines.push(currentLine); // Add the current line to the array
-        currentLine = word; // Start a new line with the current word
+        lines.push(currentLine);
+        currentLine = word;
       } else {
-        currentLine = testLine; // Add the word to the current line
+        currentLine = testLine;
       }
     }
 
-    // Push the last line if it exists
     if (currentLine) {
       lines.push(currentLine);
     }
@@ -157,9 +163,16 @@ let waveSketch = (p) => {
     }
   }
   p.saveImage = () => {
-    p.save("canvas-image.png");
+    let platformSuffix =
+      platform === "tiktok"
+        ? "tt"
+        : platform === "instagram"
+        ? "ig"
+        : "default";
+    let fileName = `${platformSuffix}-thumbnail.png`;
+    p.save(fileName);
   };
 };
 
 const sketchInstance = new p5(waveSketch);
-window.sketchInstance = sketchInstance; // Expose it for external access
+window.sketchInstance = sketchInstance;

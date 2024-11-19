@@ -5,7 +5,6 @@ const locationInputs = document.querySelectorAll("input[name='location']");
 const platformInputs = document.querySelectorAll("input[name='platform']");
 const downloadBtn = document.getElementById("downloadBtn");
 
-// Use the global sketch instance
 imageUpload.addEventListener("change", (event) => {
   const file = event.target.files[0];
 
@@ -13,7 +12,6 @@ imageUpload.addEventListener("change", (event) => {
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      // Pass the loaded file data to the global sketch instance
       window.sketchInstance.setImage({ type: "image", data: e.target.result });
     };
 
@@ -22,17 +20,14 @@ imageUpload.addEventListener("change", (event) => {
   }
 });
 
-// Handle title input
 titleInput.addEventListener("input", (event) => {
   sketchInstance.setTitleText(event.target.value);
 });
 
-// Handle font size input
 fontSizeInput.addEventListener("input", (event) => {
   sketchInstance.setFontSize(Number(event.target.value));
 });
 
-// Handle location input
 locationInputs.forEach((input) => {
   input.addEventListener("change", (event) => {
     if (event.target.checked) {
@@ -49,7 +44,6 @@ platformInputs.forEach((input) => {
   });
 });
 
-// Save image as PNG
 downloadBtn.addEventListener("click", () => {
   sketchInstance.saveImage();
 });
